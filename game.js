@@ -1668,7 +1668,7 @@ function renderEvolutionEgg() {
   } else if (state.evolutionEgg.status === "failed") {
     eggTimer.textContent = "Evolution Failed";
   } else if (state.evolutionEgg.parents.length === 1) {
-    eggTimer.textContent = "Add 1";
+    eggTimer.textContent = "Ready";
   } else {
     eggTimer.textContent = "";
   }
@@ -1983,9 +1983,9 @@ function dropMonsterIntoEgg(placedIndex) {
   const monster = getMonster(placed.id);
   state.placed[placedIndex] = null;
   state.evolutionEgg.parents.push(monster.id);
-  setStatus(state.evolutionEgg.parents.length === 1 ? `${monster.name} disappeared into the egg. Add one more monster.` : `The evolution egg is starting a 30 second countdown.`);
+  setStatus(`${monster.name} disappeared into the egg. The evolution egg is starting a 30 second countdown.`);
 
-  if (state.evolutionEgg.parents.length === 2) startEggCountdown();
+  if (state.evolutionEgg.parents.length >= 1) startEggCountdown();
   render();
 }
 
@@ -2321,7 +2321,7 @@ evolutionEgg.addEventListener("click", () => {
     setStatus("The evolution egg is counting down.");
     return;
   }
-  setStatus(state.evolutionEgg.parents.length ? "Add one more monster to start the egg." : "Drag two monsters from the board into the evolution egg.");
+  setStatus(state.evolutionEgg.parents.length ? "The evolution egg is ready to start." : "Drag any monster from the board into the evolution egg.");
 });
 document.addEventListener("pointermove", updatePointerDrag);
 document.addEventListener("pointerup", finishPointerDrag);
