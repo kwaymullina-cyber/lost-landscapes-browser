@@ -1390,7 +1390,6 @@ const eggSlotB = document.querySelector("#eggSlotB");
 const eggTimer = document.querySelector("#eggTimer");
 
 function buildEvolutionRules() {
-  const chances = [80, 75, 70, 65, 60, 55, 50, 45, 40, 35];
   return monsters.slice(10).map((target, index) => {
     const pool = monsters.slice(0, 10 + index);
     const first = pool[index % pool.length].id;
@@ -1399,7 +1398,7 @@ function buildEvolutionRules() {
     return {
       target: target.id,
       parents: [first, second],
-      chance: chances[index % chances.length],
+      chance: 99,
     };
   });
 }
