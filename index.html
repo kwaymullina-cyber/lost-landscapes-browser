@@ -18,13 +18,29 @@
         </div>
 
         <div class="top-actions" aria-label="Game actions">
-          <button class="text-button primary" id="earnButton" type="button">Earn Coins</button>
-          <button class="text-button" id="shopButton" type="button">Shop</button>
-          <button class="text-button" id="evolutionButton" type="button">Evolution</button>
-          <button class="text-button" id="collectionButton" type="button">Monsters</button>
-          <button class="icon-button" id="muteButton" type="button" title="Toggle sound" aria-label="Toggle sound">♪</button>
-          <button class="text-button danger" id="resetButton" type="button">Reset</button>
-          <div class="meter"><span>Coins</span><strong id="coins">0</strong></div>
+          <button class="action-button coin-action" id="earnButton" type="button" title="Earn coins" aria-label="Earn coins">
+            <span class="action-icon" aria-hidden="true">+</span>
+            <span>Coins</span>
+          </button>
+          <button class="action-button" id="shopButton" type="button" title="Shop" aria-label="Shop">
+            <span class="action-icon" aria-hidden="true">$</span>
+            <span>Shop</span>
+          </button>
+          <button class="action-button" id="evolutionButton" type="button" title="Evolution" aria-label="Evolution">
+            <span class="action-icon" aria-hidden="true">*</span>
+            <span>Egg</span>
+          </button>
+          <button class="action-button" id="collectionButton" type="button" title="Monsters" aria-label="Monsters">
+            <span class="action-icon" aria-hidden="true">M</span>
+            <span>Monsters</span>
+          </button>
+          <button class="action-button small-action" id="muteButton" type="button" title="Toggle sound" aria-label="Toggle sound">
+            <span class="action-icon" aria-hidden="true">♪</span>
+          </button>
+          <button class="action-button danger small-action" id="resetButton" type="button" title="Reset" aria-label="Reset">
+            <span class="action-icon" aria-hidden="true">R</span>
+          </button>
+          <div class="meter coin-meter"><span>Coins</span><strong id="coins">0</strong></div>
         </div>
       </header>
 

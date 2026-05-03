@@ -98,18 +98,23 @@ h1 {
 
 .top-actions {
   display: flex;
-  gap: 10px;
+  gap: 9px;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
 }
 
 .meter {
-  min-width: 92px;
-  padding: 8px 10px;
+  min-width: 104px;
+  padding: 9px 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.08);
+}
+
+.coin-meter {
+  background: linear-gradient(180deg, rgba(255, 211, 110, 0.18), rgba(255, 255, 255, 0.08));
+  border-color: rgba(255, 211, 110, 0.42);
 }
 
 .meter span {
@@ -120,8 +125,66 @@ h1 {
 
 .meter strong {
   display: block;
-  font-size: 1.08rem;
+  font-size: 1.32rem;
   margin-top: 1px;
+}
+
+.action-button {
+  min-width: 76px;
+  min-height: 64px;
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 9px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.action-button:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.action-button span:last-child {
+  font-size: 0.74rem;
+}
+
+.action-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--gold);
+  font-size: 1.34rem;
+  line-height: 1;
+}
+
+.coin-action {
+  background: linear-gradient(180deg, rgba(255, 211, 110, 0.24), rgba(255, 211, 110, 0.1));
+  border-color: rgba(255, 211, 110, 0.55);
+}
+
+.small-action {
+  min-width: 52px;
+}
+
+.small-action .action-icon {
+  color: var(--ink);
+}
+
+.action-button.danger {
+  border-color: rgba(255, 135, 111, 0.45);
+}
+
+.action-button.danger .action-icon {
+  color: #ffd0c8;
 }
 
 .stage-wrap {
@@ -419,6 +482,7 @@ h1 {
   align-items: end;
   justify-items: center;
   padding: 0 18px 18px;
+  touch-action: none;
 }
 
 .evolution-egg.drag-over {
@@ -605,6 +669,8 @@ h1 {
   background: var(--monster-color);
   box-shadow: inset -8px -14px 0 rgba(0, 0, 0, 0.18), 0 8px 16px rgba(0, 0, 0, 0.22);
   animation: bob 1.2s ease-in-out infinite;
+  touch-action: none;
+  user-select: none;
 }
 
 .monster[draggable="true"] {
@@ -808,6 +874,34 @@ h1 {
   line-height: 1.35;
 }
 
+.modal-copy.strong-copy {
+  color: var(--ink);
+  font-size: 1.08rem;
+  font-weight: 800;
+}
+
+.shop-balance {
+  display: inline-grid;
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border: 1px solid rgba(255, 211, 110, 0.42);
+  border-radius: 8px;
+  padding: 8px 11px;
+  color: #fff3c2;
+  background: rgba(255, 211, 110, 0.13);
+  font-weight: 900;
+}
+
+.math-problem {
+  margin: 2px 0;
+  font-size: clamp(3.4rem, 12vw, 6.2rem);
+  line-height: 0.95;
+  text-align: center;
+  color: #fff3c2;
+}
+
 .answer-row,
 .evolution-slots {
   display: flex;
@@ -827,7 +921,11 @@ h1 {
 }
 
 .answer-row input {
-  width: 120px;
+  width: min(240px, 100%);
+  min-height: 58px;
+  font-size: 2rem;
+  font-weight: 900;
+  text-align: center;
 }
 
 .modal-grid {
@@ -1001,6 +1099,10 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .top-actions {
+    justify-content: flex-start;
+  }
+
   .shop,
   .track-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1023,9 +1125,20 @@ h1 {
     justify-content: stretch;
   }
 
-  .top-actions .text-button,
+  .top-actions .action-button,
   .top-actions .meter {
     flex: 1 1 auto;
+  }
+
+  .action-button {
+    min-width: 68px;
+    min-height: 60px;
+    padding-inline: 6px;
+  }
+
+  .action-icon {
+    width: 32px;
+    height: 32px;
   }
 
   .meter {

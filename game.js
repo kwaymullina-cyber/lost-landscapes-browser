@@ -1561,7 +1561,8 @@ function clearEarnAdvanceTimer() {
 function render() {
   updateEggTimer();
   coinsEl.textContent = state.coins;
-  muteButton.textContent = state.muted ? "×" : "♪";
+  const muteIcon = muteButton.querySelector(".action-icon");
+  if (muteIcon) muteIcon.textContent = state.muted ? "×" : "♪";
   renderGrid();
   renderEvolutionEgg();
   renderModal();
@@ -1592,13 +1593,10 @@ function createMonsterEl(monster, placedIndex = null) {
     body.draggable = true;
     body.dataset.placedIndex = String(placedIndex);
     body.addEventListener("pointerdown", (event) => {
-      dragCandidate = {
-        source: "board",
-        placedIndex,
-        startX: event.clientX,
-        startY: event.clientY,
-        moved: false,
-      };
+      beginDrag("board", placedIndex, null, event);
+    });
+    body.addEventListener("touchstart", (event) => {
+      beginDrag("board", placedIndex, null, event);
     });
     body.addEventListener("dragstart", (event) => {
       event.stopPropagation();
@@ -1680,13 +1678,10 @@ function renderEvolutionEgg() {
   if (resultPreview) {
     resultPreview.draggable = true;
     resultPreview.addEventListener("pointerdown", (event) => {
-      dragCandidate = {
-        source: "eggResult",
-        monsterId: state.evolutionEgg.result,
-        startX: event.clientX,
-        startY: event.clientY,
-        moved: false,
-      };
+      beginDrag("eggResult", null, state.evolutionEgg.result, event);
+    });
+    resultPreview.addEventListener("touchstart", (event) => {
+      beginDrag("eggResult", null, state.evolutionEgg.result, event);
     });
     resultPreview.addEventListener("dragstart", (event) => {
       event.stopPropagation();
@@ -1724,9 +1719,9 @@ function renderEarnModal() {
       </div>`
     : "";
   modalBody.innerHTML = `
-    <p class="modal-copy">Answer up to 3 addition problems. Each correct answer earns ${coinReward} coins.</p>
+    <p class="modal-copy strong-copy">Each correct answer earns ${coinReward} coins.</p>
     <p class="modal-copy">Question ${Math.min(state.mathCorrectCount + 1, 3)} of 3</p>
-    <h3>${problem.a} + ${problem.b} = ?</h3>
+    <h3 class="math-problem">${problem.a} + ${problem.b} = ?</h3>
     <form class="answer-row" id="answerForm">
       <input id="mathAnswer" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="Math answer" ${correct ? "disabled" : ""}>
       <button class="text-button primary" type="submit" ${correct ? "disabled" : ""}>Check</button>
@@ -1778,7 +1773,8 @@ function scheduleNextEarnStep() {
 function renderShopModal() {
   modalTitle.textContent = "Shop";
   modalBody.innerHTML = `
-    <p class="modal-copy">Buy any of these 10 starter monsters for ${shopPrice} coins each.</p>
+    <p class="shop-balance"><span class="coin-icon"></span><span>${state.coins} coins</span></p>
+    <p class="modal-copy">Starter monsters cost ${shopPrice} coins each.</p>
     <div class="modal-grid" id="shopGrid"></div>
   `;
   const shopGrid = modalBody.querySelector("#shopGrid");
@@ -2001,12 +1997,33 @@ function startEggCountdown() {
   startEvolutionCountdownSound();
 }
 
+function beginDrag(source, placedIndex, monsterId, event) {
+  const point = getEventPoint(event);
+  if (!point) return;
+  dragCandidate = {
+    source,
+    placedIndex,
+    monsterId,
+    startX: point.x,
+    startY: point.y,
+    currentX: point.x,
+    currentY: point.y,
+    moved: false,
+  };
+  if (event.cancelable) event.preventDefault();
+}
+
 function updatePointerDrag(event) {
   if (!dragCandidate) return;
-  const distance = Math.hypot(event.clientX - dragCandidate.startX, event.clientY - dragCandidate.startY);
+  const point = getEventPoint(event);
+  if (!point) return;
+  dragCandidate.currentX = point.x;
+  dragCandidate.currentY = point.y;
+  const distance = Math.hypot(point.x - dragCandidate.startX, point.y - dragCandidate.startY);
   if (distance > 8) {
     dragCandidate.moved = true;
     evolutionEgg.classList.add("drag-over");
+    if (event.cancelable) event.preventDefault();
   }
 }
 
@@ -2018,17 +2035,25 @@ function finishPointerDrag(event) {
 
   if (!candidate.moved) return;
   suppressNextTileClick = true;
+  const point = getEventPoint(event) ?? { x: candidate.currentX, y: candidate.currentY };
   if (candidate.source === "eggResult") {
-    if (placeEggResultAtPoint(event.clientX, event.clientY)) return;
+    if (placeEggResultAtPoint(point.x, point.y)) return;
     setStatus("Drop the evolved monster on an empty space.");
     return;
   }
 
-  if (isPointInElement(event.clientX, event.clientY, evolutionEgg)) {
+  if (isPointInElement(point.x, point.y, evolutionEgg)) {
     dropMonsterIntoEgg(candidate.placedIndex);
     return;
   }
   setStatus("Drop the monster on the evolution egg to use it.");
+}
+
+function getEventPoint(event) {
+  const touch = event.changedTouches?.[0] ?? event.touches?.[0];
+  if (touch) return { x: touch.clientX, y: touch.clientY };
+  if (Number.isFinite(event.clientX) && Number.isFinite(event.clientY)) return { x: event.clientX, y: event.clientY };
+  return null;
 }
 
 function updateEggTimer() {
@@ -2291,6 +2316,9 @@ evolutionEgg.addEventListener("click", () => {
 });
 document.addEventListener("pointermove", updatePointerDrag);
 document.addEventListener("pointerup", finishPointerDrag);
+document.addEventListener("touchmove", updatePointerDrag, { passive: false });
+document.addEventListener("touchend", finishPointerDrag, { passive: false });
+document.addEventListener("touchcancel", finishPointerDrag, { passive: false });
 
 muteButton.addEventListener("click", () => {
   state.muted = !state.muted;
