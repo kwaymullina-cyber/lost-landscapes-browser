@@ -2235,7 +2235,7 @@ function playEvolutionSound() {
   ensureAudio();
   if (!audioContext || state.muted) return;
   [392, 523, 659, 784].forEach((frequency, index) => {
-    window.setTimeout(() => playNote(frequency, "triangle", 0.08, 0.18), index * 90);
+    window.setTimeout(() => playNote(frequency, "triangle", 0.22, 0.26), index * 90);
   });
 }
 
@@ -2243,7 +2243,7 @@ function playFailureSound() {
   ensureAudio();
   if (!audioContext || state.muted) return;
   [220, 185, 147].forEach((frequency, index) => {
-    window.setTimeout(() => playNote(frequency, "sawtooth", 0.05, 0.14), index * 95);
+    window.setTimeout(() => playNote(frequency, "sawtooth", 0.16, 0.22), index * 95);
   });
 }
 
@@ -2267,10 +2267,10 @@ function playCountdownTick() {
   const progress = 1 - Math.min(1, remaining / evolutionDurationMs);
   const low = 110 + progress * 95;
   const high = 440 + progress * 260;
-  playNote(low, "sawtooth", 0.035, 0.18);
-  window.setTimeout(() => playNote(high, "square", 0.055, 0.08), 130);
+  playNote(low, "sawtooth", 0.13, 0.24);
+  window.setTimeout(() => playNote(high, "square", 0.18, 0.12), 130);
   if (remaining <= 5000) {
-    window.setTimeout(() => playNote(high * 1.25, "square", 0.045, 0.06), 330);
+    window.setTimeout(() => playNote(high * 1.25, "square", 0.16, 0.09), 330);
   }
 }
 
