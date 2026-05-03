@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Lost Landscapes - Browser Edition</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <div>
+            <h1>The Lost Landscapes</h1>
+            <p>Browser Edition</p>
+          </div>
+        </div>
+
+        <div class="top-actions" aria-label="Game actions">
+          <button class="text-button primary" id="earnButton" type="button">Earn Coins</button>
+          <button class="text-button" id="shopButton" type="button">Shop</button>
+          <button class="text-button" id="evolutionButton" type="button">Evolution</button>
+          <button class="text-button" id="collectionButton" type="button">Monsters</button>
+          <button class="icon-button" id="muteButton" type="button" title="Toggle sound" aria-label="Toggle sound">♪</button>
+          <button class="text-button danger" id="resetButton" type="button">Reset</button>
+          <div class="meter"><span>Coins</span><strong id="coins">0</strong></div>
+        </div>
+      </header>
+
+      <section class="stage-wrap">
+        <section class="island-area" aria-label="Lost landscape island">
+          <div class="sky">
+            <span class="moon"></span>
+          </div>
+          <div class="evolution-egg" id="evolutionEgg" aria-label="Evolution egg drop zone">
+            <span class="egg-shine" aria-hidden="true"></span>
+            <span class="egg-slot" id="eggSlotA"></span>
+            <span class="egg-slot" id="eggSlotB"></span>
+            <span class="egg-timer" id="eggTimer"></span>
+          </div>
+          <div class="island" id="island">
+            <div class="island-core"></div>
+            <div class="grid" id="grid"></div>
+          </div>
+        </section>
+      </section>
+
+      <footer class="statusbar">
+        <span id="status">Earn coins, buy a monster, then place it on the island.</span>
+      </footer>
+    </main>
+
+    <div class="modal-backdrop" id="modalBackdrop" hidden>
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-head">
+          <h2 id="modalTitle">Menu</h2>
+          <button class="icon-button" id="closeModal" type="button" title="Close" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+      </section>
+    </div>
+
+    <script src="./game.js"></script>
+  </body>
+</html>
