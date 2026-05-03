@@ -1931,6 +1931,15 @@ function getMatchingEvolutionRule(first, second) {
   }) ?? null;
 }
 
+function getFallbackEvolutionTarget(first, second) {
+  const lockedMonster = monsters.find((monster) => !basicMonsterIds.includes(monster.id) && !isUnlocked(monster.id));
+  if (lockedMonster) return lockedMonster.id;
+
+  const seed = `${first}:${second}`.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const evolvedPool = monsters.filter((monster) => !basicMonsterIds.includes(monster.id));
+  return evolvedPool[seed % evolvedPool.length]?.id ?? monsters[seed % monsters.length].id;
+}
+
 function canTryRule(rule) {
   return rule.parents.every((id) => isUnlocked(id));
 }
@@ -1983,13 +1992,14 @@ function dropMonsterIntoEgg(placedIndex) {
 function startEggCountdown() {
   const [first, second] = state.evolutionEgg.parents;
   const rule = getMatchingEvolutionRule(first, second);
+  const fallbackTarget = getFallbackEvolutionTarget(first, second);
   state.evolutionEgg = {
     ...state.evolutionEgg,
     status: "incubating",
     startedAt: Date.now(),
     endsAt: Date.now() + evolutionDurationMs,
-    ruleTarget: rule?.target ?? null,
-    chance: rule?.chance ?? 0,
+    ruleTarget: rule?.target ?? fallbackTarget,
+    chance: 99,
     result: null,
   };
   restartEvolutionTimer();
